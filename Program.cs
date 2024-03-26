@@ -60,36 +60,29 @@
 
             Console.WriteLine("Введите интервалы для случайных чисел (a и b):");
             Console.Write("a: ");
-            double a = double.Parse(Console.ReadLine());
+            int a = int.Parse(Console.ReadLine());
             Console.Write("b: ");
-            double b = double.Parse(Console.ReadLine());
+            int b = int.Parse(Console.ReadLine());
 
             Random random = new Random();
             double[,] coefficients = new double[n, n];
             double[] constants = new double[n];
 
             Console.WriteLine("Случайно сгенерированная система:");
-
-            for (int i = 0; i < n; i++)
+            do
             {
-                for (int j = 0; j < n; j++)
+                for (int i = 0; i < n; i++)
                 {
-                    coefficients[i, j] = random.NextDouble() * (b - a) + a;
-                    Console.WriteLine($"a[{i + 1},{j + 1}] = {coefficients[i, j]}");
+                    for (int j = 0; j < n; j++)
+                    {
+                        coefficients[i, j] = random.Next(a, b);
+                        Console.WriteLine($"a[{i + 1},{j + 1}] = {coefficients[i, j]}");
+                    }
+                    constants[i] = random.Next(a, b);
+                    Console.WriteLine($"b[{i + 1}] = {constants[i]}");
                 }
-                constants[i] = random.NextDouble() * (b - a) + a;
-                Console.WriteLine($"b[{i + 1}] = {constants[i]}");
-            }
-
-            if (Check(coefficients, constants))
-            {
-                Yakobi(coefficients, constants);
-            }
-            else
-            {
-                Console.WriteLine("Система не сходится или имеет несоклько решений");
-                return;
-            }
+            } while (!Check(coefficients, constants));
+            Yakobi(coefficients, constants);       
             
         }
 
@@ -97,19 +90,23 @@
         {
             double Aij = 0;
             double Aii = 0;
-            for( int i = 1; i < constats.Length; i++)
+            for( int i = 0; i < constats.Length; i++)
             {
-                for (int j = 1; j < constats.Length; j++)
+                Aii = coefficients[i,i];
+                for (int j = 0; j < constats.Length - 1; j++)
                 {
                     if (i == j)
                     {
                         continue;
                     }
                     Aij += coefficients[i, j];
-                    Aii += coefficients[i, i];
                 }
+                if (Aii < Aij)
+                {
+                    return false;
+                }                    
             }
-            return Math.Abs(Aij) < Math.Abs(Aii);
+            return true;
         }
 
         static double[] Yakobi(double[,] coefficients, double[] constants)
