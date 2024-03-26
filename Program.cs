@@ -114,7 +114,6 @@
             double eps = 0.0000001;
             double[] results0 = new double[constants.Length];
             double[] results1 = new double[constants.Length];
-            double[] results2 = new double[constants.Length];
             for (int i = 0; i < constants.Length; i++)
             {
                 results1[i] = constants[i];
